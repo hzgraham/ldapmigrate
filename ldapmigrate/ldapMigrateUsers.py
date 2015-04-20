@@ -40,16 +40,21 @@ class ldapMigrateUsers(object):
     
     def list_attribs(self, search_user):
         self.search_user = search_user
-        try:
-            print self.search_user
-            result = self.ldap_connection.search_s("ou=Users," + self.ldap_base_dn, ldap.SCOPE_SUBTREE, "uid=" + search_user)
-            print result
-            data_l = ldap.modlist.addModlist(result[0][1]) 
+        print self.search_user
+        result = self.ldap_connection.search_s("ou=Users," + self.ldap_base_dn, ldap.SCOPE_SUBTREE, "uid=" + search_user)
+        print len(result)
+        print result
+        if len(result) == 0:
+            print "User not found."
+            sys.exit(1)
+        else:
+            data_l = ldap.modlist.addModlist(result[0][1])
             print data_l
-        except ldap.LDAPError, e:
-            print e
-        
-    #
+
+#        except ldap.LDAPError, e:
+#            print e
+
+
     # l = ldap.initialize('ldap://ldap.example.com',trace_level=1)
     # attrib_list = []
     # for entry in x:

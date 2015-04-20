@@ -20,19 +20,21 @@ if __name__ == "__main__":
     #https://docs.python.org/3/library/argparse.html#metavar
     #usage = "Usage: %prog [options] <uid>"
     parser = argparse.ArgumentParser(description='Migrate users and groups between envs.')
-    parser.add_argument('--user',
-                        nargs='+',
+    parser.add_argument('user',
+#                        required=True,
 #                        action="store_true",
-                        dest="search_user",
+                        metavar="uid",
                         help='the uid of the person being migrated')
 
     parser.add_argument('-cn', '--name',
                         dest='search_name',
                         help='search for the user by first and last name')
     parser.add_argument('--host',
+                        required=True,
                         dest='host',
                         help='enter the LDAP uri')
     parser.add_argument('--basedn','-b',
+                        required=True,
                         dest='basedn',
                         help='The search base for LDAP')
 
@@ -58,6 +60,7 @@ if __name__ == "__main__":
     print args
     LDAP_HOST = args.host
     LDAP_BASE_DN = args.basedn
+    search_user  = args.user
 
     print LDAP_HOST
     print LDAP_BASE_DN
@@ -69,18 +72,12 @@ if __name__ == "__main__":
     pw = None
     
     user_migrate = ldapMigrateUsers(login=login, ldap_host=LDAP_HOST, ldap_base_dn=LDAP_BASE_DN)
- #   print "test search_user"
-    search_user  = args.search_user[0]
 
     print search_user
     if search_user:
-        user_migrate.list_attribs(search_user) 
+        user_migrate.list_attribs(search_user)
     else:
         linfo.print_user_info(search_user)
-    
-#for 
-#y = l
-
 
 #print "Doing unbind"
 #l.unbind()
