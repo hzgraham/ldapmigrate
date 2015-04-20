@@ -27,16 +27,16 @@ if __name__ == "__main__":
                         help='the uid of the person being migrated')
 
     parser.add_argument('-cn', '--name',
-                        dest='search_name',
-                        help='search for the user by first and last name')
+                        dest='full_name',
+                        help='search for the user by first and last name in quotes')
     parser.add_argument('--host',
                         required=True,
                         dest='host',
-                        help='enter the LDAP uri')
+                        help='enter the LDAP uri for example: ldap.example.com')
     parser.add_argument('--basedn','-b',
                         required=True,
                         dest='basedn',
-                        help='The search base for LDAP')
+                        help='The search base for LDAP for example: dc=example,dc=com')
 
     # subparsers = parser.add_subparsers(title='Commands',
     #                                    dest='command',
