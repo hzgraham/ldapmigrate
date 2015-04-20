@@ -11,7 +11,7 @@ class ldapMigrateUsers(object):
         self.ldap_base_dn = ldap_base_dn
         self.ldap_host = ldap_host
         print ldap_host
-        self.ldap_connection = ldap.initialize(ldap_host)
+        self.ldap_connection = ldap.initialize("ldap://" + ldap_host)
         self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTFILE,'/etc/pki/tls/certs/newca.crt')
         self.ldap_connection.start_tls_s()
         self.ldap_connection.sasl_interactive_bind_s("", self.auth)

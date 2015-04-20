@@ -10,8 +10,8 @@ import argparse
 import getpass
 from ldapmigrate.ldapMigrateUsers import ldapMigrateUsers
 
-LDAP_HOST = 'ldap://ldap.example.com'
-LDAP_BASE_DN = 'dc=example,dc=com'
+#LDAP_HOST = 'ldap://ldap.example.com'
+#LDAP_BASE_DN = 'dc=example,dc=com'
 
 if __name__ == "__main__":
 
@@ -20,7 +20,7 @@ if __name__ == "__main__":
     #https://docs.python.org/3/library/argparse.html#metavar
     #usage = "Usage: %prog [options] <uid>"
     parser = argparse.ArgumentParser(description='Migrate users and groups between envs.')
-    parser.add_argument('-u', '--user',
+    parser.add_argument('--user',
                         nargs='+',
 #                        action="store_true",
                         dest="search_user",
@@ -32,20 +32,46 @@ if __name__ == "__main__":
     parser.add_argument('--host',
                         dest='host',
                         help='enter the LDAP uri')
+    parser.add_argument('--basedn','-b',
+                        dest='basedn',
+                        help='The search base for LDAP')
+
+    # subparsers = parser.add_subparsers(title='Commands',
+    #                                    dest='command',
+    #                                    help='sub-command help')
+
+    # #Refresh subparser for migrating entries to lower environments such as Dev
+    # parser_refresh = subparsers.add_parser('refresh',
+    #                                        help='Migrating users to lower environments')
+    # subparser_refresh = parser_refresh.add_subparsers(dest='sub_command')
+    
+
+    # #Promote subparser for promoting entries up through environments towards Prod
+    # parser_promote = subparsers.add_parser('promote',
+    #                                        help='Move entries from lower env up towards Prod')
+    # subparser_promote = parser_promote.add_subparsers(dest='sub_command')
+
+    
+
 
     args = parser.parse_args()
-#    print(args.string)
-    
+    print args
+    LDAP_HOST = args.host
+    LDAP_BASE_DN = args.basedn
+
+    print LDAP_HOST
+    print LDAP_BASE_DN
     if not args:
         parser.print_help()
         sys.exit(1)
 
     user_name = None
     pw = None
-
+    
     user_migrate = ldapMigrateUsers(login=login, ldap_host=LDAP_HOST, ldap_base_dn=LDAP_BASE_DN)
-    print "test search_user"
+ #   print "test search_user"
     search_user  = args.search_user[0]
+
     print search_user
     if search_user:
         user_migrate.list_attribs(search_user) 
