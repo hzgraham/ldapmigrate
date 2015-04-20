@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+
+import argparse
+
+#Things to input
+#1. environment to migrate to
+#2. cn or uid of user
+#from optparse import OptionParser
+#ldapsearch/ldapadd example
+import getpass
+from ldapmigrate.ldapMigrateUsers import ldapMigrateUsers
+
+LDAP_HOST = 'ldap://ldap.example.com'
+LDAP_BASE_DN = 'dc=example,dc=com'
+
+if __name__ == "__main__":
+
+    login = getpass.getuser()
+    #argparse docs
+    #https://docs.python.org/3/library/argparse.html#metavar
+    #usage = "Usage: %prog [options] <uid>"
+    parser = argparse.ArgumentParser(description='Migrate users and groups between envs.')
+    parser.add_argument('-u', '--user',
+                        nargs='+',
+#                        action="store_true",
+                        dest="search_user",
+                        help='the uid of the person being migrated')
+
+    parser.add_argument('-cn', '--name',
+                        dest='search_name',
+                        help='search for the user by first and last name')
+    parser.add_argument('--host',
+                        dest='host',
+                        help='enter the LDAP uri')
+
+    args = parser.parse_args()
+#    print(args.string)
+    
+    if not args:
+        parser.print_help()
+        sys.exit(1)
+
+    user_name = None
+    pw = None
+
+    user_migrate = ldapMigrateUsers(login=login, ldap_host=LDAP_HOST, ldap_base_dn=LDAP_BASE_DN)
+    print "test search_user"
+    search_user  = args.search_user[0]
+    print search_user
+    if search_user:
+        user_migrate.list_attribs(search_user) 
+    else:
+        linfo.print_user_info(search_user)
+    
+#for 
+#y = l
+
+
+#print "Doing unbind"
+#l.unbind()
