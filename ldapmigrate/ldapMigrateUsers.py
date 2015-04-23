@@ -12,25 +12,19 @@ class ldapMigrateUsers(object):
         self.ldap_mod_host = ldap_mod_host
         self.auth = ldap.sasl.gssapi("")
 
-    def list_attribs(self, search_user):
+    def list_attribs(self, search_entry):
         print "This is the origin host"
         print self.ldap_host
         self.ldap_connection = ldap.initialize("ldap://" + self.ldap_host)
         self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTFILE,'/etc/pki/tls/certs/newca.crt')
         self.ldap_connection.start_tls_s()
         self.ldap_connection.sasl_interactive_bind_s("", self.auth)
-        self.search_user = search_user
-        print self.search_user
-        result = self.ldap_connection.search_s("ou=Users," + self.ldap_base_dn, ldap.SCOPE_SUBTREE, "uid=" + search_user)
+        self.search_entry = search_entry
+        print self.search_entry
+        result = self.ldap_connection.search_s( self.ldap_base_dn, ldap.SCOPE_SUBTREE, search_entry)
         print result
-        user2 = result[0]
         self.result = result
-        print "checking user2"
-        print user2
-        print user2[1]['uid']
         print "################"
-        user_3 = user2[1]['uid'] #this creates a one entry list
-        print user_3[0] #this basically makes the list into a string of the uid
         if len(result) == 0:
             print "User not found."
             sys.exit(1)
@@ -54,10 +48,9 @@ class ldapMigrateUsers(object):
     #         print attrib_list
     #         return attrib_list
 
-    def migrate_user(self, search_user):
-        self.search_user = search_user
-        self.entry = self.list_attribs(self.search_user)
-        print self
+    def migrate_user(self, search_entry):
+        self.search_entry = search_entry
+        self.entry = self.list_attribs(self.search_entry)
         self.add_user()
 
     def add_user(self):
@@ -67,8 +60,9 @@ class ldapMigrateUsers(object):
         self.ldap_mod_conn.set_option(ldap.OPT_X_TLS_CACERTFILE,'/etc/pki/tls/certs/newca.crt')
         self.ldap_mod_conn.start_tls_s()
         self.ldap_mod_conn.sasl_interactive_bind_s("", self.auth)
+        self.result2 = self.ldap_connection.search_s( self.ldap_base_dn, ldap.SCOPE_SUBTREE, self.search_entry)
         print "The dn of the user"
-        self.dn = self.result[0][0]
+        self.dn = self.result2[0][0]
         print self.dn
         print "The entry that is going to be added"
         print self.entry

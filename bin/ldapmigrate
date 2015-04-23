@@ -80,11 +80,11 @@ if __name__ == "__main__":
                                 dest='basedn',
                                 help='The search base for LDAP for example: dc=example,dc=com')
 
-    parser.add_argument('user',
+    parser.add_argument('entry',
                         # required=True,
                         # action="store_true",
-                        metavar="uid",
-                        help='the uid of the person being migrated')
+                        metavar="Entry",
+                        help='the entry being migrated, for example uid=jsmith or "cn=john smith"')
     
 
 
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     LDAP_HOST = args.host
     LDAP_MOD_HOST = args.mod_host
     LDAP_BASE_DN = args.basedn
-    search_user  = args.user
+    search_entry  = args.entry
 
     print LDAP_HOST
     print LDAP_BASE_DN
@@ -105,11 +105,9 @@ if __name__ == "__main__":
     pw = None
     
     user_migrate = ldapMigrateUsers(login=login, ldap_host=LDAP_HOST, ldap_mod_host=LDAP_MOD_HOST, ldap_base_dn=LDAP_BASE_DN)
-    print search_user
-    if search_user:
-        user_migrate.migrate_user(search_user)
-    else:
-        linfo.print_user_info(search_user)
+    print search_entry
+    if search_entry:
+        user_migrate.migrate_user(search_entry)
 
 #print "Doing unbind"
 #l.unbind()
