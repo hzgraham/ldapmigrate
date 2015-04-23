@@ -45,13 +45,14 @@ if __name__ == "__main__":
     # #Refresh subparser for migrating entries to lower environments such as Dev
     # parser_refresh = subparsers.add_parser('refresh',
     #                                        help='Migrating users to lower environments')
-    # subparser_refresh = parser_refresh.add_subparsers(dest='sub_command')
-    
 
     # #Promote subparser for promoting entries up through environments towards Prod
     # parser_promote = subparsers.add_parser('promote',
     #                                        help='Move entries from lower env up towards Prod')
     # subparser_promote = parser_promote.add_subparsers(dest='sub_command')
+    # parser_promote.add_argument('-e', '--env',
+    #                             required=True,
+    #                             help="The environment to promote to")
 
     
 
@@ -75,7 +76,7 @@ if __name__ == "__main__":
 
     print search_user
     if search_user:
-        user_migrate.list_attribs(search_user)
+        user_migrate.migrate_user(search_user)
     else:
         linfo.print_user_info(search_user)
 
