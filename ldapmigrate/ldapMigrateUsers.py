@@ -9,10 +9,12 @@ class ldapMigrateUsers(object):
     def __init__(self, login="anonymous", ldap_host=None, ldap_base_dn=None, ldap_mod_host=None):
         self.ldap_base_dn = ldap_base_dn
         self.ldap_host = ldap_host
-        self.ldap_mod_host = ldap_host
+        self.ldap_mod_host = ldap_mod_host
         self.auth = ldap.sasl.gssapi("")
 
     def list_attribs(self, search_user):
+        print "This is the origin host"
+        print self.ldap_host
         self.ldap_connection = ldap.initialize("ldap://" + self.ldap_host)
         self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTFILE,'/etc/pki/tls/certs/newca.crt')
         self.ldap_connection.start_tls_s()
@@ -59,6 +61,8 @@ class ldapMigrateUsers(object):
         self.add_user()
 
     def add_user(self):
+        print "This is the host being modified"
+        print self.ldap_mod_host
         self.ldap_mod_conn = ldap.initialize("ldap://" + self.ldap_mod_host)
         self.ldap_mod_conn.set_option(ldap.OPT_X_TLS_CACERTFILE,'/etc/pki/tls/certs/newca.crt')
         self.ldap_mod_conn.start_tls_s()
