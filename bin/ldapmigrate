@@ -84,7 +84,7 @@ if __name__ == "__main__":
                                 required=True,
                                 dest='basedn',
                                 help='The search base for LDAP for example: dc=example,dc=com')
-    parser_refresh.add_argument('--password', metavar='password', \
+    parser_promote.add_argument('--password', metavar='password', \
                                     dest='password', \
                                     nargs='*', \
                                     required=True, \
@@ -97,6 +97,7 @@ if __name__ == "__main__":
     LDAP_MOD_HOST = args.mod_host
     LDAP_BASE_DN = args.basedn
     search_entry  = args.entry
+    password = args.password[0]
 
     print LDAP_HOST
     print LDAP_BASE_DN
@@ -107,7 +108,7 @@ if __name__ == "__main__":
     user_name = None
     pw = None
     
-    user_migrate = ldapMigrateUsers(login=login, ldap_host=LDAP_HOST, ldap_mod_host=LDAP_MOD_HOST, ldap_base_dn=LDAP_BASE_DN)
+    user_migrate = ldapMigrateUsers(login=login, ldap_host=LDAP_HOST, ldap_mod_host=LDAP_MOD_HOST, ldap_base_dn=LDAP_BASE_DN, password=password)
     print search_entry
     if search_entry:
         user_migrate.migrate_user(search_entry)
