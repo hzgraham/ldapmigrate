@@ -4,15 +4,10 @@ import argparse
 import getpass
 from ldapmigrate.ldapMigrateUsers import ldapMigrateUsers
 from ldapmigrate.PromptAction import PromptAction
-#LDAP_HOST = 'ldap://ldap.example.com'
-#LDAP_BASE_DN = 'dc=example,dc=com'
 
 if __name__ == "__main__":
 
     login = getpass.getuser()
-    #argparse docs
-    #https://docs.python.org/3/library/argparse.html#metavar
-    #usage = "Usage: %prog [options] <uid>"
     parser = argparse.ArgumentParser(description='Migrate users and groups between envs.')
 
     parser.add_argument('entry',
@@ -21,21 +16,6 @@ if __name__ == "__main__":
                         metavar="Entry",
                         help='the entry being migrated, for example uid=cplanet or "cn=captain planet"')
 
-    # parser.add_argument('-cn', '--name',
-    #                     dest='full_name',
-    #                     help='search for the user by first and last name in quotes')
-    # parser.add_argument('--host',
-    #                     required=True,
-    #                     dest='host',
-    #                     help='enter the LDAP uri for example: ldap.example.com')
-    # parser.add_argument('--basedn','-b',
-    #                     required=True,
-    #                     dest='basedn',
-    #                     help='The search base for LDAP for example: dc=example,dc=com')
-
-    # subparsers = parser.add_subparsers(title='Commands',
-    #                                    dest='command',
-    #                                    help='sub-command help')
 
     subparsers = parser.add_subparsers(help='sub-command help')
     #Refresh subparser for migrating entries to lower environments such as Dev
@@ -112,6 +92,3 @@ if __name__ == "__main__":
     print search_entry
     if search_entry:
         user_migrate.migrate_user(search_entry)
-
-#print "Doing unbind"
-#l.unbind()

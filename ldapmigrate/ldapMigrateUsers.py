@@ -10,7 +10,6 @@ class ldapMigrateUsers(object):
             self.ldap_base_dn = ldap_base_dn
             self.ldap_host = ldap_host
             self.ldap_mod_host = ldap_mod_host
-            print password
             self.login = login
             self.auth = None
             if password:
@@ -22,8 +21,6 @@ class ldapMigrateUsers(object):
                 print self.auth
 
     def list_attribs(self, search_entry):
-        print "This is the origin host"
-        print self.ldap_host
         self.ldap_connection = ldap.initialize("ldap://" + self.ldap_host)
         self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTFILE,'/etc/pki/tls/certs/newca.crt')
         self.ldap_connection.start_tls_s()
@@ -52,8 +49,6 @@ class ldapMigrateUsers(object):
         self.add_user()
 
     def add_user(self):
-        print "This is the host being modified"
-        print self.ldap_mod_host
         self.ldap_mod_conn = ldap.initialize("ldap://" + self.ldap_mod_host)
         self.ldap_mod_conn.set_option(ldap.OPT_X_TLS_CACERTFILE,'/etc/pki/tls/certs/newca.crt')
         self.ldap_mod_conn.start_tls_s()
@@ -65,8 +60,4 @@ class ldapMigrateUsers(object):
             print "GSSAPI bind happening"
             self.ldap_mod_conn.sasl_interactive_bind_s("", self.auth)
         self.result2 = self.ldap_mod_conn.search_s( self.ldap_base_dn, ldap.SCOPE_SUBTREE, self.search_entry)
-        print "The dn of the user"
         self.dn = self.result2[0][0]
-        print self.dn
-        print "The entry that is going to be added"
-        print self.entry
