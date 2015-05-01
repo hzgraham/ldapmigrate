@@ -5,8 +5,14 @@ import getpass
 from ldapmigrate.ldapMigrateUsers import ldapMigrateUsers
 from ldapmigrate.PromptAction import PromptAction
 
-if __name__ == "__main__":
+LDAP_HOST = []
+LDAP_MOD_HOST = []
+LDAP_BASE_DN = []
+search_entry  = []
+password = []
+lookup_host = []
 
+if __name__ == "__main__":
     login = getpass.getuser()
     parser = argparse.ArgumentParser(description='Migrate users and groups between envs.')
 
@@ -24,11 +30,11 @@ if __name__ == "__main__":
     parser_refresh.add_argument('-cn', '--name',
                                 dest='full_name',
                                 help='search for the user by first and last name in quotes')
-    parser_refresh.add_argument('-m','--topmaster',
+    parser_refresh.add_argument('--topmaster','-m',
                                 required=True,
                                 dest='host',
                                 help='enter the LDAP Master uri for example: ldapmaster.example.com')
-    parser_refresh.add_argument('-l','--lowermaster',
+    parser_refresh.add_argument('--lowermaster','-l',
                                 required=True,
                                 dest='mod_host',
                                 help='enter the LDAP uri of the lower level LDAP Master, example: ldap.example.com')
@@ -71,15 +77,43 @@ if __name__ == "__main__":
                                     action=PromptAction, \
                                     help='Plain text password for user')
 
+    parser_lookup = subparsers.add_parser('lookup',
+                                          help='Check the entry before attempting to move it')
+    parser_lookup.add_argument('-cn', '--name',
+                                dest='full_name',
+                                help='search for the user by first and last name in quotes')
+    parser_lookup.add_argument('--src-host','-m',
+                                required=True,
+                                dest='lookup_host',
+                                help='enter the LDAP source host uri for example: ldap.example.com')
+    parser_lookup.add_argument('--basedn','-b',
+                                required=True,
+                                dest='basedn',
+                                help='The search base for LDAP for example: dc=example,dc=com')
+    parser_lookup.add_argument('--password', metavar='password', \
+                                    dest='password', \
+                                    nargs='*', \
+                                    required=True, \
+                                    action=PromptAction, \
+                                    help='Plain text password for user')
+
+
+
     args = parser.parse_args()
     print args
-    LDAP_HOST = args.host
-    LDAP_MOD_HOST = args.mod_host
+    if 'host' in args:
+        LDAP_HOST = args.host
+        print "This is the LDAP host: ", LDAP_HOST
+    if 'mod_host' in args:
+        LDAP_MOD_HOST = args.mod_host
+        print LDAP_MOD_HOST
     LDAP_BASE_DN = args.basedn
     search_entry  = args.entry
     password = args.password[0]
+    if 'lookup_host' in args:
+        LDAP_HOST = args.lookup_host
+        print LDAP_HOST
 
-    print LDAP_HOST
     print LDAP_BASE_DN
     if not args:
         parser.print_help()
@@ -90,5 +124,10 @@ if __name__ == "__main__":
     
     user_migrate = ldapMigrateUsers(login=login, ldap_host=LDAP_HOST, ldap_mod_host=LDAP_MOD_HOST, ldap_base_dn=LDAP_BASE_DN, password=password)
     print search_entry
-    if search_entry:
+    print "This is the ldap_mod_host: ", LDAP_MOD_HOST
+    if LDAP_MOD_HOST:
+        print "Doing modifications"
         user_migrate.migrate_user(search_entry)
+    elif 'lookup_host' in args:
+        print "Doing a pure lookup"
+        user_migrate.lookup_user(search_entry)
