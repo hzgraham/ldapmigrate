@@ -30,11 +30,11 @@ if __name__ == "__main__":
     parser_refresh.add_argument('-cn', '--name',
                                 dest='full_name',
                                 help='search for the user by first and last name in quotes')
-    parser_refresh.add_argument('--topmaster','-m',
+    parser_refresh.add_argument('--src-host','-s',
                                 required=True,
                                 dest='host',
                                 help='enter the LDAP Master uri for example: ldapmaster.example.com')
-    parser_refresh.add_argument('--lowermaster','-l',
+    parser_refresh.add_argument('--dest-host','-d',
                                 required=True,
                                 dest='mod_host',
                                 help='enter the LDAP uri of the lower level LDAP Master, example: ldap.example.com')
@@ -58,11 +58,11 @@ if __name__ == "__main__":
     parser_promote.add_argument('-e', '--env',
                                 required=True,
                                 help="The environment to promote to")
-    parser_promote.add_argument('-m','--topmaster',
+    parser_promote.add_argument('-s','--src-host',
                                 required=True,
                                 dest='host',
                                 help='enter the LDAP Master uri for example: ldapmaster.example.com')
-    parser_promote.add_argument('-l','--lowermaster',
+    parser_promote.add_argument('-d','--dest-host',
                                 required=True,
                                 dest='mod_host',
                                 help='enter the LDAP uri of the lower level LDAP Master, example: ldap.example.com')
