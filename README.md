@@ -16,7 +16,7 @@ Clone the repo.
 Go into the repo's dir and setup your env variables to test.
 
     $ cd ldapmigrate
-    $ . env/setup.py
+    $ . env/setup
 
 From here you can run the command.
 
