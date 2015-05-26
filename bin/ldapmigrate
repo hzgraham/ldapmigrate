@@ -100,21 +100,16 @@ if __name__ == "__main__":
 
 
     args = parser.parse_args()
-    print args
     if 'host' in args:
         LDAP_HOST = args.host
-        print "This is the LDAP host: ", LDAP_HOST
     if 'mod_host' in args:
         LDAP_MOD_HOST = args.mod_host
-        print LDAP_MOD_HOST
     LDAP_BASE_DN = args.basedn
     search_entry  = args.entry
     password = args.password[0]
     if 'lookup_host' in args:
         LDAP_HOST = args.lookup_host
-        print LDAP_HOST
 
-    print LDAP_BASE_DN
     if not args:
         parser.print_help()
         sys.exit(1)
@@ -123,8 +118,6 @@ if __name__ == "__main__":
     pw = None
     
     user_migrate = ldapMigrateUsers(login=login, ldap_host=LDAP_HOST, ldap_mod_host=LDAP_MOD_HOST, ldap_base_dn=LDAP_BASE_DN, password=password)
-    print search_entry
-    print "This is the ldap_mod_host: ", LDAP_MOD_HOST
     if LDAP_MOD_HOST:
         print "Doing modifications"
         user_migrate.migrate_user(search_entry)
