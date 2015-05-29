@@ -13,6 +13,7 @@ password = []
 lookup_host = []
 
 if __name__ == "__main__":
+    ldapMigrate = ldapMigrateUsers()
     login = getpass.getuser()
     parser = argparse.ArgumentParser(description='Migrate users and groups between envs.')
 
@@ -96,7 +97,7 @@ if __name__ == "__main__":
                                     required=True, \
                                     action=PromptAction, \
                                     help='Plain text password for user')
-
+#    parser_lookup.set_defaults(func=user_migrate.lookup_user)
 
 
     args = parser.parse_args()
@@ -121,6 +122,9 @@ if __name__ == "__main__":
     if LDAP_MOD_HOST:
         print "Doing modifications"
         user_migrate.migrate_user(search_entry)
+    # elif 'lookup_host' in args:
+    #     print search_entry
+    #     args.func(search_entry)
     elif 'lookup_host' in args:
         print "Doing a pure lookup"
-        user_migrate.lookup_user(search_entry)
+        user_migrate.lookup_user(args)

@@ -46,7 +46,16 @@ class ldapMigrateUsers(object):
         #print self.dn
         self.add_user()
 
-    def lookup_user(self, search_entry):
+    def lookup_user(self, args):
+        if 'host' in args:
+            LDAP_HOST = args.host
+        if 'mod_host' in args:
+            LDAP_MOD_HOST = args.mod_host
+        LDAP_BASE_DN = args.basedn
+        search_entry  = args.entry
+        password = args.password[0]
+        if 'lookup_host' in args:
+            LDAP_HOST = args.lookup_host
         self.lookup_entry = search_entry
         self.entry = self.list_attribs(self.lookup_entry)
         print self.entry
