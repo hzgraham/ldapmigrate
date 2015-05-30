@@ -7,19 +7,36 @@ import sys
 class ldapMigrateUsers(object):
 
     def __init__(self, login="anonymous", ldap_host=None, ldap_base_dn=None, ldap_mod_host=None, password=None):
-            self.ldap_base_dn = ldap_base_dn
-            self.ldap_host = ldap_host
-            self.ldap_mod_host = ldap_mod_host
-            self.login = login
-            self.auth = None
-            if password:
-                print "Not using GSSAPI"
-                self.password = password
-            else:
-                print "using GSSAPI"
-                self.auth = ldap.sasl.gssapi("")
-
+        #These will be used when args is added to the class assigning in the bin file
+        self.ldap_base_dn = ldap_base_dn
+        self.ldap_host = ldap_host
+        self.ldap_mod_host = ldap_mod_host
+        self.login = login
+        self.auth = None
+        if password:
+            print "Not using GSSAPI"
+            self.password = password
+        else:
+            print "using GSSAPI"
+            self.auth = ldap.sasl.gssapi("")
+    
+            
     def list_attribs(self, search_entry):
+        # def list_attribs(self, args):
+        # self.login = login
+        # self.auth = None
+        # if password:
+        #     print "Not using GSSAPI"
+        #     self.password = password
+        # else:
+        #     print "using GSSAPI"
+        #     self.auth = ldap.sasl.gssapi("")
+        #These will be used when args is added to the class assigning in the bin file
+        # self.ldap_base_dn = args.basedn
+        # self.ldap_host = args.host
+        # self.ldap_mod_host = args.mod_host
+        # self.login = login
+        # self.auth = None
         self.ldap_connection = ldap.initialize("ldap://" + self.ldap_host)
         self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTFILE,'/etc/pki/tls/certs/newca.crt')
         self.ldap_connection.start_tls_s()
@@ -57,6 +74,7 @@ class ldapMigrateUsers(object):
         if 'lookup_host' in args:
             LDAP_HOST = args.lookup_host
         self.lookup_entry = search_entry
+        # self.entry = self.list_attribs(args)
         self.entry = self.list_attribs(self.lookup_entry)
         print self.entry
 
