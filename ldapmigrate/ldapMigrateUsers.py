@@ -60,8 +60,8 @@ class ldapMigrateUsers(object):
     def migrate_user(self, search_entry):
         self.search_entry = search_entry
         self.entry = self.list_attribs(self.search_entry)
-        #print self.dn
-        self.add_user()
+        #Calls the add_entry function
+        self.add_entry()
 
     def lookup_user(self, args):
         if 'host' in args:
@@ -78,7 +78,7 @@ class ldapMigrateUsers(object):
         self.entry = self.list_attribs(self.lookup_entry)
         print self.entry
 
-    def add_user(self):
+    def add_entry(self, args):
         self.ldap_mod_conn = ldap.initialize("ldap://" + self.ldap_mod_host)
         self.ldap_mod_conn.set_option(ldap.OPT_X_TLS_CACERTFILE,'/etc/pki/tls/certs/newca.crt')
         self.ldap_mod_conn.start_tls_s()
