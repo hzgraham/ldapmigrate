@@ -128,4 +128,4 @@ if __name__ == "__main__":
     #     args.func(args)
     elif 'lookup_host' in args:
         print "Doing a pure lookup"
-        user_migrate.lookup_user(args)
+        user_migrate.list_attribs(args)

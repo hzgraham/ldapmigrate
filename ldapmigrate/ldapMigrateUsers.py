@@ -21,22 +21,26 @@ class ldapMigrateUsers(object):
             self.auth = ldap.sasl.gssapi("")
     
             
-    def list_attribs(self, search_entry):
-        # def list_attribs(self, args):
-        # self.login = login
-        # self.auth = None
-        # if password:
-        #     print "Not using GSSAPI"
-        #     self.password = password
-        # else:
-        #     print "using GSSAPI"
-        #     self.auth = ldap.sasl.gssapi("")
-        #These will be used when args is added to the class assigning in the bin file
-        # self.ldap_base_dn = args.basedn
-        # self.ldap_host = args.host
-        # self.ldap_mod_host = args.mod_host
-        # self.login = login
-        # self.auth = None
+    def list_attribs(self, args):
+        login="anonymous"
+        if 'host' in args:
+            LDAP_HOST = args.host
+        if 'mod_host' in args:
+            LDAP_MOD_HOST = args.mod_host
+        LDAP_BASE_DN = args.basedn
+        if 'lookup_host' in args:
+            LDAP_HOST = args.lookup_host
+        self.ldap_base_dn = args.basedn
+        self.login = login
+        self.auth = None
+        self.search_entry  = args.entry
+        password = args.password[0]
+        if password:
+            print "Not using GSSAPI"
+            self.password = password
+        else:
+            print "using GSSAPI"
+            self.auth = ldap.sasl.gssapi("")
         self.ldap_connection = ldap.initialize("ldap://" + self.ldap_host)
         self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTFILE,'/etc/pki/tls/certs/newca.crt')
         self.ldap_connection.start_tls_s()
@@ -46,14 +50,15 @@ class ldapMigrateUsers(object):
         else:
             print "GSSAPI bind happening"
             self.ldap_connection.sasl_interactive_bind_s("", self.auth)
-        self.search_entry = search_entry
-        result = self.ldap_connection.search_s( self.ldap_base_dn, ldap.SCOPE_SUBTREE, search_entry)
+        result = self.ldap_connection.search_s( self.ldap_base_dn, ldap.SCOPE_SUBTREE, self.search_entry)
         self.dn = result[0][0]
         self.result = result
+        #Checks if the returned entry is empty
         if len(result) == 0:
-            print "User not found."
+            print "Entry not found."
             sys.exit(1)
         else:
+            print ldap.modlist.addModlist(result[0][1])
             return ldap.modlist.addModlist(result[0][1])
         self.ldap_connection.unbind()
 
@@ -63,20 +68,9 @@ class ldapMigrateUsers(object):
         #Calls the add_entry function
         self.add_entry()
 
-    def lookup_user(self, args):
-        if 'host' in args:
-            LDAP_HOST = args.host
-        if 'mod_host' in args:
-            LDAP_MOD_HOST = args.mod_host
-        LDAP_BASE_DN = args.basedn
-        search_entry  = args.entry
-        password = args.password[0]
-        if 'lookup_host' in args:
-            LDAP_HOST = args.lookup_host
-        self.lookup_entry = search_entry
-        # self.entry = self.list_attribs(args)
-        self.entry = self.list_attribs(self.lookup_entry)
-        print self.entry
+    # def lookup_user(self, args):
+    #     self.entry = self.list_attribs(args)
+    #     print self.entry
 
     def add_entry(self, args):
         self.ldap_mod_conn = ldap.initialize("ldap://" + self.ldap_mod_host)
