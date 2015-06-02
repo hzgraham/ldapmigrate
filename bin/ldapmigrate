@@ -115,7 +115,7 @@ if __name__ == "__main__":
     user_migrate = ldapMigrateUsers(login=login, ldap_host=LDAP_HOST, ldap_mod_host=LDAP_MOD_HOST, ldap_base_dn=LDAP_BASE_DN, password=password)
     if LDAP_MOD_HOST:
         print "Doing modifications"
-        user_migrate.migrate_user(search_entry)
+        user_migrate.migrate_user(args)
     # elif 'lookup_host' in args:
     #     print search_entry
     #     print "Doing a pure lookup"

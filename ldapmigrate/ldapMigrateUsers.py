@@ -63,11 +63,10 @@ class ldapMigrateUsers(object):
             return ldap.modlist.addModlist(result[0][1])
         self.ldap_connection.unbind()
 
-    def migrate_user(self, search_entry):
-        self.search_entry = search_entry
+    def migrate_user(self, args):
         self.entry = self.list_attribs(args)
         #Calls the add_entry function
-        self.add_entry()
+        self.add_entry(args)
 
     # def lookup_user(self, args):
     #     self.entry = self.list_attribs(args)
