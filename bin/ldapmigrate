@@ -26,24 +26,24 @@ if __name__ == "__main__":
 
     subparsers = parser.add_subparsers(help='sub-command help')
     #Refresh subparser for migrating entries to lower environments such as Dev
-    parser_refresh = subparsers.add_parser('refresh',
+    parser_migrate = subparsers.add_parser('migrate',
                                            help='Migrating users to lower environments')
-    parser_refresh.add_argument('-cn', '--name',
+    parser_migrate.add_argument('-cn', '--name',
                                 dest='full_name',
                                 help='search for the user by first and last name in quotes')
-    parser_refresh.add_argument('--src-host','-s',
+    parser_migrate.add_argument('--src-host','-s',
                                 required=True,
                                 dest='host',
                                 help='enter the LDAP Master uri for example: ldapmaster.example.com')
-    parser_refresh.add_argument('--dest-host','-d',
+    parser_migrate.add_argument('--dest-host','-d',
                                 required=True,
                                 dest='mod_host',
                                 help='enter the LDAP uri of the lower level LDAP Master, example: ldap.example.com')
-    parser_refresh.add_argument('--basedn','-b',
+    parser_migrate.add_argument('--basedn','-b',
                                 required=True,
                                 dest='basedn',
                                 help='The search base for LDAP for example: dc=example,dc=com')
-    parser_refresh.add_argument('--password', metavar='password', \
+    parser_migrate.add_argument('--password', metavar='password', \
                                     dest='password', \
                                     nargs='*', \
                                     required=True, \
@@ -51,32 +51,32 @@ if __name__ == "__main__":
                                     help='Plain text password for user')
     
     #Promote subparser for promoting entries up through environments towards Prod
-    parser_promote = subparsers.add_parser('promote',
-                                           help='Move entries from lower env up towards Prod')
-    parser_promote.add_argument('-cn', '--name',
-                                dest='full_name',
-                                help='search for the user by first and last name in quotes')
-    parser_promote.add_argument('-e', '--env',
-                                required=True,
-                                help="The environment to promote to")
-    parser_promote.add_argument('-s','--src-host',
-                                required=True,
-                                dest='host',
-                                help='enter the LDAP Master uri for example: ldapmaster.example.com')
-    parser_promote.add_argument('-d','--dest-host',
-                                required=True,
-                                dest='mod_host',
-                                help='enter the LDAP uri of the lower level LDAP Master, example: ldap.example.com')
-    parser_promote.add_argument('--basedn','-b',
-                                required=True,
-                                dest='basedn',
-                                help='The search base for LDAP for example: dc=example,dc=com')
-    parser_promote.add_argument('--password', metavar='password', \
-                                    dest='password', \
-                                    nargs='*', \
-                                    required=True, \
-                                    action=PromptAction, \
-                                    help='Plain text password for user')
+    # parser_promote = subparsers.add_parser('promote',
+    #                                        help='Move entries from lower env up towards Prod')
+    # parser_promote.add_argument('-cn', '--name',
+    #                             dest='full_name',
+    #                             help='search for the user by first and last name in quotes')
+    # parser_promote.add_argument('-e', '--env',
+    #                             required=True,
+    #                             help="The environment to promote to")
+    # parser_promote.add_argument('-s','--src-host',
+    #                             required=True,
+    #                             dest='host',
+    #                             help='enter the LDAP Master uri for example: ldapmaster.example.com')
+    # parser_promote.add_argument('-d','--dest-host',
+    #                             required=True,
+    #                             dest='mod_host',
+    #                             help='enter the LDAP uri of the lower level LDAP Master, example: ldap.example.com')
+    # parser_promote.add_argument('--basedn','-b',
+    #                             required=True,
+    #                             dest='basedn',
+    #                             help='The search base for LDAP for example: dc=example,dc=com')
+    # parser_promote.add_argument('--password', metavar='password', \
+    #                                 dest='password', \
+    #                                 nargs='*', \
+    #                                 required=True, \
+    #                                 action=PromptAction, \
+    #                                 help='Plain text password for user')
 
     parser_lookup = subparsers.add_parser('lookup',
                                           help='Check the entry before attempting to move it')

@@ -51,8 +51,9 @@ class ldapMigrateUsers(object):
             print "GSSAPI bind happening"
             self.ldap_connection.sasl_interactive_bind_s("", self.auth)
         result = self.ldap_connection.search_s( self.ldap_base_dn, ldap.SCOPE_SUBTREE, self.search_entry)
-        self.dn = result[0][0]
+        #self.dn = result[0][0]
         self.result = result
+        print self.result
         #Checks if the returned entry is empty
         if len(result) == 0:
             print "Entry not found."
@@ -64,7 +65,7 @@ class ldapMigrateUsers(object):
 
     def migrate_user(self, search_entry):
         self.search_entry = search_entry
-        self.entry = self.list_attribs(self.search_entry)
+        self.entry = self.list_attribs(args)
         #Calls the add_entry function
         self.add_entry()
 
