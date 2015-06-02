@@ -28,9 +28,6 @@ if __name__ == "__main__":
     #Refresh subparser for migrating entries to lower environments such as Dev
     parser_migrate = subparsers.add_parser('migrate',
                                            help='Migrating users to lower environments')
-    parser_migrate.add_argument('-cn', '--name',
-                                dest='full_name',
-                                help='search for the user by first and last name in quotes')
     parser_migrate.add_argument('--src-host','-s',
                                 required=True,
                                 dest='host',
@@ -80,9 +77,6 @@ if __name__ == "__main__":
 
     parser_lookup = subparsers.add_parser('lookup',
                                           help='Check the entry before attempting to move it')
-    parser_lookup.add_argument('-cn', '--name',
-                                dest='full_name',
-                                help='search for the user by first and last name in quotes')
     parser_lookup.add_argument('--src-host','-m',
                                 required=True,
                                 dest='lookup_host',
