@@ -22,7 +22,7 @@ class ldapMigrateUsers(object):
     
             
     def list_attribs(self, args):
-        login="anonymous"
+        #login="anonymous"
         if 'host' in args:
             LDAP_HOST = args.host
         if 'mod_host' in args:
@@ -31,11 +31,10 @@ class ldapMigrateUsers(object):
         if 'lookup_host' in args:
             LDAP_HOST = args.lookup_host
         self.ldap_base_dn = args.basedn
-        self.login = login
         self.auth = None
         self.search_entry  = args.entry
-        password = args.password[0]
-        if password:
+        if args.password:
+            password = args.password[0]
             print "Not using GSSAPI"
             self.password = password
         else:

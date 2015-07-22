@@ -88,11 +88,10 @@ if __name__ == "__main__":
     parser_lookup.add_argument('--password', metavar='password', \
                                     dest='password', \
                                     nargs='*', \
-                                    required=True, \
+                                    #required=True, \
                                     action=PromptAction, \
                                     help='Plain text password for user')
     #parser_lookup.set_defaults(func=user_migrate.lookup_user)
-
 
     args = parser.parse_args()
     if 'host' in args:
@@ -101,7 +100,8 @@ if __name__ == "__main__":
         LDAP_MOD_HOST = args.mod_host
     LDAP_BASE_DN = args.basedn
     search_entry  = args.entry
-    password = args.password[0]
+    if args.password:
+        password = args.password[0]
     if 'lookup_host' in args:
         LDAP_HOST = args.lookup_host
 
