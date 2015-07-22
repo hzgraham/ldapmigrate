@@ -13,12 +13,13 @@ class ldapMigrateUsers(object):
         self.ldap_mod_host = ldap_mod_host
         self.login = login
         self.auth = None
-        if password:
-            print "Not using GSSAPI"
-            self.password = password
-        else:
-            print "using GSSAPI"
-            self.auth = ldap.sasl.gssapi("")
+        self.cacert = '/etc/openldap/cacerts/'
+        # if password:
+        #     print "Not using GSSAPI"
+        #     self.password = password
+        # else:
+        #     print "using GSSAPI"
+        #     self.auth = ldap.sasl.gssapi("")
     
             
     def list_attribs(self, args):
@@ -38,10 +39,10 @@ class ldapMigrateUsers(object):
             print "Not using GSSAPI"
             self.password = password
         else:
-            print "using GSSAPI"
+            #print "using GSSAPI"
             self.auth = ldap.sasl.gssapi("")
         self.ldap_connection = ldap.initialize("ldap://" + self.ldap_host)
-        self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTFILE,'/etc/pki/tls/certs/newca.crt')
+        self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTDIR,self.cacert)
         self.ldap_connection.start_tls_s()
         if self.auth is None:
             print "Simple bind happening"
@@ -73,7 +74,7 @@ class ldapMigrateUsers(object):
 
     def add_entry(self, args):
         self.ldap_mod_conn = ldap.initialize("ldap://" + self.ldap_mod_host)
-        self.ldap_mod_conn.set_option(ldap.OPT_X_TLS_CACERTFILE,'/etc/pki/tls/certs/newca.crt')
+        self.ldap_mod_conn.set_option(ldap.OPT_X_TLS_CACERTDIR,self.cacert)
         self.ldap_mod_conn.start_tls_s()
         if self.auth is None:
             print "Simple bind happening"
