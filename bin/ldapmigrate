@@ -43,7 +43,7 @@ if __name__ == "__main__":
     parser_migrate.add_argument('--password', metavar='password', \
                                     dest='password', \
                                     nargs='*', \
-                                    required=True, \
+                                    #required=True, \
                                     action=PromptAction, \
                                     help='Plain text password for user')
     
