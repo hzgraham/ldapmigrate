@@ -96,7 +96,7 @@ class ldapMigrateUsers(object):
             print "Entry not found."
             sys.exit(1)
         else:
-            print ldap.modlist.addModlist(result[0][1])
+            #print ldap.modlist.addModlist(result[0][1])
             return ldap.modlist.addModlist(result[0][1])
         self.ldap_connection.unbind()
 
