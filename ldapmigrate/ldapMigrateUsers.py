@@ -108,10 +108,10 @@ class ldapMigrateUsers(object):
     def add_entry(self, args):
         self.ldap_mod_conn = ldap.initialize("ldap://" + self.ldap_mod_host)
         if self.cacertdir:
-            self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTDIR,self.cacertdir)
+            self.ldap_mod_conn.set_option(ldap.OPT_X_TLS_CACERTDIR,self.cacertdir)
         elif self.cacertfile:
-            self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTFILE,self.cacertfile)
-        self.ldap_connection.start_tls_s()
+            self.ldap_mod_conn.set_option(ldap.OPT_X_TLS_CACERTFILE,self.cacertfile)
+        self.ldap_mod_conn.start_tls_s()
         if self.auth is None:
             print "Simple bind happening"
             self.ldap_mod_conn.simple_bind_s("uid=" + self.login + ",ou=users," + self.ldap_base_dn, self.password)
