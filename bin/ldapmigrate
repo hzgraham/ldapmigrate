@@ -29,17 +29,21 @@ if __name__ == "__main__":
     parser_migrate = subparsers.add_parser('migrate',
                                            help='Migrating users to lower environments')
     parser_migrate.add_argument('--src-host','-s',
-                                required=True,
-                                dest='host',
+                                #required=True,
+                                dest='lookup_host',
                                 help='enter the LDAP Master uri for example: ldapmaster.example.com')
     parser_migrate.add_argument('--dest-host','-d',
                                 required=True,
                                 dest='mod_host',
                                 help='enter the LDAP uri of the lower level LDAP Master, example: ldap.example.com')
     parser_migrate.add_argument('--basedn','-b',
-                                required=True,
+                                #required=True,
                                 dest='basedn',
                                 help='The search base for LDAP for example: dc=example,dc=com')
+    parser_migrate.add_argument('--cacert','-c',
+                                #required=True,
+                                dest='cacert',
+                                help='The path to the CA cert file or directory containing it, if a directory then make sure it is managed by the c_rehash utility')
     parser_migrate.add_argument('--password', metavar='password', \
                                     dest='password', \
                                     nargs='*', \
@@ -78,13 +82,17 @@ if __name__ == "__main__":
     parser_lookup = subparsers.add_parser('lookup',
                                           help='Check the entry before attempting to move it')
     parser_lookup.add_argument('--src-host','-m',
-                                required=True,
+                                #required=True,
                                 dest='lookup_host',
                                 help='enter the LDAP source host uri for example: ldap.example.com')
     parser_lookup.add_argument('--basedn','-b',
-                                required=True,
+                                #required=True,
                                 dest='basedn',
                                 help='The search base for LDAP for example: dc=example,dc=com')
+    parser_lookup.add_argument('--cacert','-c',
+                                #required=True,
+                                dest='cacert',
+                                help='The path to the CA cert file or directory containing it,  if a directory then make sure it is managed by the c_rehash utility')
     parser_lookup.add_argument('--password', metavar='password', \
                                     dest='password', \
                                     nargs='*', \
