@@ -24,12 +24,30 @@ From here you can run the command.
 
 ## How to authenticate?
 
-This script will prompt for a password by default and --password is a required option but can be empty.
 You can do one of three things (steps 1,2 use simple auth TLS binds; step 3 is GSSAPI bind):
 
-1. Put the password on the command line after the --password argument.
-2. Don't put anything after --password in which case you will be prompted for a password. This keeps your history free of a password.
-3. Don't put anything after --password and just hit return when prompted. The script will then use GSSAPI authentication.
+1. If you don't use the --password option then GSSAPI will be used in which case you need a Kerberos TGT.
+2. Put the password on the command line after the --password argument.
+3. Don't put anything after --password in which case you will be prompted for a password. This keeps your history free of a password.
+
+## About the ldapmigrate command and options.
+
+The ldapmigrate script performs two functions which are identified by the "lookup" or "migrate" option seen when running.
+
+    $ ./bin/ldapmigrate -h
+
+Currently the syntax is to enter a user specified option identifying the LDAP entry before using either lookup or migrate.
+
+    $ ./bin/ldapmigrate uid=username lookup -h
+    $ ./bin/ldapmigrate uid=username migrate -h
+
+Except for destination host option (--dest-host or just -d) for the "migrate" function all other options for these functions are optional.
+
+## LDAP config sources
+
+The LDAP config URI, BASE, and TLS_CACERT or TLS_CACERTDIR options for the "lookup" and "migrate" functions are first taken from the command line arguments.
+If those options weren't used in the command then they will be taken from the ~/.ldaprc and if not there then from /etc/openldap/ldap.conf files.
+Still if nothing is provided or found in the config files the command will exit out with a warning requesting the option be provided.
 
 ## Example Commands
 
@@ -38,9 +56,19 @@ If you just want to lookup a user and see if they exist in the destination env y
 
     $ ./bin/ldapmigrate uid=username lookup -m ldapserver.example.com -b dc=example,dc=com --password
 
-To migrate from on env to another use
+or without any options (pr and using GSSAPI for authentication:
 
-    $ ./bin/ldapmigrate uid=username refresh -m ldap.source.example.com -l ldap.dest.example.com -b dc=example,dc=com --password
+    $ kinit
+    $ ./bin/ldapmigrate uid=username lookup
+
+To migrate from on env to another use:
+
+    $ ./bin/ldapmigrate uid=username migrate -m ldap.source.example.com -d ldap.dest.example.com -b dc=example,dc=com --password
+
+or using GSSAPI authentication with only the required distination host option where the entry will be written (this should differ from the source host taken from the URI option in either the ~/.ldaprc file or /etc/openldap/ldap.conf ):
+
+    $ kinit
+    $ ./bin/ldapmigrate uid=username migrate -d ldapmaster.destination.example.com
 
 ## RFEs
 
