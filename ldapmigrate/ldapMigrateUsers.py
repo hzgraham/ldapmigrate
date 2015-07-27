@@ -51,53 +51,54 @@ class ldapMigrateUsers(object):
             self.ldap_base_dn = self.get_config_option(option)
         if not self.ldap_base_dn:
             sys.exit('Please Specify a '+option+'!')
-        if args.cacert:
-            self.cacert = args.cacert
-        else:
-            option_file = 'TLS_CACERT'
-            option_dir = 'TLS_CACERTDIR'
-            self.cacert_file = self.get_config_option(option_file)
-            self.cacert_dir = self.get_config_option(option_dir)
-            if self.cacert_dir:
-                self.cacertdir = self.cacert_dir
-            elif self.cacert_file:
-                self.cacertfile = self.cacert_file
-            else:
-                sys.exit('Please Specify a CA cert file or directory!')
         self.auth = None
         self.search_entry  = args.entry
+        #Determining if a simple bind is occurring or GSSAPI
         if args.password:
             password = args.password[0]
             print "Not using GSSAPI"
             self.password = password
+            if args.cacert:
+                self.cacert = args.cacert
+            else:
+                option_file = 'TLS_CACERT'
+                option_dir = 'TLS_CACERTDIR'
+                self.cacert_file = self.get_config_option(option_file)
+                self.cacert_dir = self.get_config_option(option_dir)
+                if self.cacert_dir:
+                    self.cacertdir = self.cacert_dir
+                elif self.cacert_file:
+                    self.cacertfile = self.cacert_file
+                else:
+                    sys.exit('Please Specify a CA cert file or directory!')
         else:
             self.auth = ldap.sasl.gssapi("")
+        #Parsing the LDAP URI
         if self.ldap_host.startswith('ldap://'):
             self.ldap_connection = ldap.initialize(self.ldap_host)
         else:
             self.ldap_connection = ldap.initialize("ldap://" + self.ldap_host)
-        if self.cacertdir:
-            self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTDIR,self.cacertdir)
-        elif self.cacertfile:
-            self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTFILE,self.cacertfile)
         if self.auth is None:
             print "Simple bind happening"
+            if self.cacertdir:
+                self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTDIR,self.cacertdir)
+            elif self.cacertfile:
+                self.ldap_connection.set_option(ldap.OPT_X_TLS_CACERTFILE,self.cacertfile)
             self.ldap_connection.start_tls_s()
             self.ldap_connection.simple_bind_s("uid=" + self.login + ",ou=users," + self.ldap_base_dn, self.password)
         else:
             print "GSSAPI bind happening"
             self.ldap_connection.sasl_interactive_bind_s("", self.auth)
-        result = self.ldap_connection.search_s( self.ldap_base_dn, ldap.SCOPE_SUBTREE, self.search_entry)
+        self.result = self.ldap_connection.search_s( self.ldap_base_dn, ldap.SCOPE_SUBTREE, self.search_entry)
         #self.dn = result[0][0]
-        self.result = result
         print self.result
         #Checks if the returned entry is empty
-        if len(result) == 0:
+        if len(self.result) == 0:
             print "Entry not found."
             sys.exit(1)
         else:
             #print ldap.modlist.addModlist(result[0][1])
-            return ldap.modlist.addModlist(result[0][1])
+            return ldap.modlist.addModlist(self.result[0][1])
         self.ldap_connection.unbind()
 
     def migrate_user(self, args):
